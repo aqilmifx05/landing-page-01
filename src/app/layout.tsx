@@ -11,12 +11,21 @@ const inter = Inter({
   display: "swap",
 });
 
-const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID ?? "GTM-TG7GVFT";
+/**
+ * "Live" switch. On Vercel, every deployment is treated as a test (no GTM,
+ * noindex) until NEXT_PUBLIC_SITE_LIVE=true is set for the production
+ * environment — so test URLs never pollute analytics or search results.
+ * Other hosts default to live, as before.
+ */
+const isLive = process.env.VERCEL ? process.env.NEXT_PUBLIC_SITE_LIVE === "true" : true;
+const GTM_ID = isLive ? (process.env.NEXT_PUBLIC_GTM_ID ?? "GTM-TG7GVFT") : "";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://get.mifx.com"),
   title: "MIFX",
-  robots: { index: true, follow: true, "max-image-preview": "large" },
+  robots: isLive
+    ? { index: true, follow: true, "max-image-preview": "large" }
+    : { index: false, follow: false },
   other: { google: "notranslate" },
 };
 

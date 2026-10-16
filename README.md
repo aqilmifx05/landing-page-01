@@ -26,8 +26,29 @@ Requires Node.js ≥ 20.9.
 
 | Variable | Default | Purpose |
 |---|---|---|
-| `NEXT_PUBLIC_GTM_ID` | `GTM-TG7GVFT` | GTM container (set to empty string to disable, e.g. on staging) |
+| `NEXT_PUBLIC_SITE_LIVE` | unset | **Vercel only.** Until set to `true`, Vercel deployments are test builds: GTM off + `noindex`. Set it on the Production environment at go-live. |
+| `NEXT_PUBLIC_GTM_ID` | `GTM-TG7GVFT` | GTM container used when the site is live |
 | `NEXT_PUBLIC_SITE_URL` | `https://get.mifx.com` | `metadataBase` for canonical / OG URLs |
+
+Non-Vercel hosts are treated as live by default.
+
+## Test on Vercel
+
+**Option A — CLI (fastest, no Git needed)**
+
+```bash
+cd mifx-forex
+npx vercel          # log in, accept defaults → gives a preview URL
+npx vercel --prod   # optional: a stable *.vercel.app URL
+```
+
+**Option B — GitHub import (auto-deploys on every push)**
+
+1. Push this folder to a GitHub repo (it's already a git repo with one commit).
+2. vercel.com/new → Import the repo → framework auto-detected as Next.js → Deploy.
+
+Either way, open `<your-url>/forex` (the root `/` redirects there). Test deployments are
+`noindex` and don't load GTM until `NEXT_PUBLIC_SITE_LIVE=true` is set.
 
 ## Project structure
 
