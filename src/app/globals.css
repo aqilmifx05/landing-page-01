@@ -1,26 +1,213 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * MIFX design tokens — extracted from the Framer project (get.mifx.com/forex).
+ * Brand scales are exposed as Tailwind colors (bg-brand-500, text-ink-400 …),
+ * and mapped onto shadcn/ui semantic variables below so ui/* components
+ * (Button, Table, Popover, Carousel) inherit the MIFX look.
+ */
+@theme {
+  /* Breakpoints match the Framer project: mobile < 810 ≤ tablet < 1200 ≤ desktop */
+  --breakpoint-tablet: 810px;
+  --breakpoint-desktop: 1200px;
+
+  /* Brand green */
+  --color-brand-50: #afe4c1;
+  --color-brand-300: #4ec785;
+  --color-brand-500: #00bf72;
+  --color-brand-600: #00a562;
+  --color-brand-700: #006339;
+  --color-brand-800: #004727;
+  --color-brand-900: #002e17;
+
+  /* Navy surfaces */
+  --color-navy-950: #01101c;
+  --color-navy-900: #011b2b;
+  --color-navy-glow: rgb(0 78 116);
+
+  /* Neutral ink scale */
+  --color-ink-900: #253947;
+  --color-ink-700: #4a5664;
+  --color-ink-500: #7a8190;
+  --color-ink-400: #9b9fb1;
+  --color-ink-300: #b6b9c9;
+  --color-ink-200: #d1d3de;
+  --color-ink-100: #e4e5eb;
+  --color-ink-50: #f6f6f9;
+
+  --color-star: #fbee5b;
+
+  /* Marquee for regulator logos: shifts by exactly one copy (--marquee-copies) */
+  --animate-marquee: marquee 30s linear infinite;
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-100% / var(--marquee-copies, 2)));
+    }
+  }
+
+  /* Gentle float for decorative badges */
+  --animate-float: float 6s ease-in-out infinite;
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-inter);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* The landing page is dark-first; shadcn semantic tokens map to MIFX colors. */
+:root {
+  --background: #01101c;
+  --foreground: #ffffff;
+  --card: #011b2b;
+  --card-foreground: #ffffff;
+  --popover: #04253a;
+  --popover-foreground: #ffffff;
+  --primary: #00bf72;
+  --primary-foreground: #002e17;
+  --secondary: #002e17;
+  --secondary-foreground: #00bf72;
+  --muted: #011b2b;
+  --muted-foreground: #9b9fb1;
+  --accent: #04253a;
+  --accent-foreground: #ffffff;
+  --destructive: #cc1d1f;
+  --border: rgb(255 255 255 / 0.12);
+  --input: rgb(255 255 255 / 0.15);
+  --ring: #00bf72;
+  --radius: 0.5rem; /* 8px — Framer button radius */
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans scroll-smooth;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Section heading scale (Framer: 28/35 mobile, 48/51.84 tablet+) */
+  .heading-section {
+    @apply text-[28px] leading-[35px] font-bold tracking-[-0.7px] tablet:text-5xl tablet:leading-[1.08] tablet:tracking-[-1.2px];
+  }
+  /* Card title (Framer: 20/28 mobile, 24/32 tablet+) */
+  .heading-card {
+    @apply text-xl leading-7 font-bold tracking-[-0.3px] tablet:text-2xl tablet:leading-8 tablet:tracking-[-0.36px];
+  }
+  /* Radial "bg-light" glow used behind several sections */
+  .glow-radial {
+    background: radial-gradient(50% 50% at 50% 50%, rgb(0 78 116 / 0.7) 12.64%, rgb(0 255 34 / 0) 100%);
+  }
+  /* Thin gradient divider between dark sections */
+  .divider-fade {
+    background: linear-gradient(
+      270deg,
+      rgb(255 255 255 / 0) 0%,
+      rgb(255 255 255 / 0.2) 50%,
+      rgb(255 255 255 / 0) 100%
+    );
+  }
+  /* Card border gradient used on tool / benefit cards */
+  .card-surface {
+    @apply relative overflow-hidden rounded-3xl border border-white/10;
+    background: linear-gradient(180deg, rgb(1 16 28) 0%, rgb(1 31 51) 100%);
+  }
+}
+
+/*
+ * Header: transparent over the hero, tinted + blurred once the page scrolls.
+ * Uses a scroll-driven animation; browsers without support get the tinted
+ * header from the start (always readable).
+ */
+.header-scroll {
+  background-color: rgb(1 16 28 / 0.75);
+  backdrop-filter: blur(12px);
+}
+@keyframes header-tint {
+  from {
+    background-color: rgb(1 16 28 / 0);
+    backdrop-filter: blur(0);
+  }
+  to {
+    background-color: rgb(1 16 28 / 0.75);
+    backdrop-filter: blur(12px);
+  }
+}
+@supports (animation-timeline: scroll()) {
+  .header-scroll {
+    animation: header-tint linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 120px;
+  }
+}
+
+/*
+ * One-shot reveal (replaces Framer "appear" effects). State is set by
+ * <RevealObserver />; without JS, nothing is ever hidden.
+ */
+.reveal {
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    translate 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal[data-reveal="pending"] {
+  opacity: 0;
+  translate: 0 32px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .animate-float {
+    animation: none;
+  }
 }
