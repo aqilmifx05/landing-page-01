@@ -7,6 +7,7 @@ import { Star } from "lucide-react";
 
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 import { testimonials, type Testimonial } from "@/content/forex";
+import { trackingIds } from "@/content/tracking-ids";
 import { cn } from "@/lib/utils";
 import { SectionHeading } from "./section-heading";
 
@@ -41,8 +42,10 @@ function TestimonialCard({ t }: { t: Testimonial }) {
 }
 
 function ArrowButton({ dir, onClick }: { dir: "prev" | "next"; onClick: () => void }) {
+  const id = dir === "prev" ? trackingIds.testimonials.prev : trackingIds.testimonials.next;
   return (
     <button
+      id={id}
       type="button"
       onClick={onClick}
       aria-label={dir === "prev" ? "Testimoni sebelumnya" : "Testimoni berikutnya"}
@@ -58,6 +61,7 @@ function ArrowButton({ dir, onClick }: { dir: "prev" | "next"; onClick: () => vo
         width={40}
         height={40}
         unoptimized
+        className="pointer-events-none"
       />
     </button>
   );
@@ -128,6 +132,7 @@ export function Testimonials() {
             <button
               key={t.name}
               type="button"
+              id={trackingIds.testimonials.dot(i)}
               role="tab"
               aria-selected={selected === i}
               aria-label={`Testimoni ${i + 1}: ${t.name}`}

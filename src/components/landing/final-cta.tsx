@@ -7,6 +7,7 @@ import iconEurusd from "@/assets/images/cta-icon-eurusd.webp";
 import iconGold from "@/assets/images/cta-icon-gold.webp";
 import iconNasdaq from "@/assets/images/cta-icon-nasdaq.webp";
 import { finalCta } from "@/content/forex";
+import { trackingIds } from "@/content/tracking-ids";
 import { cn } from "@/lib/utils";
 import { CtaButton } from "./cta-button";
 import { SectionHeading } from "./section-heading";
@@ -60,7 +61,7 @@ export function FinalCta() {
           className="max-w-[260px] tablet:max-w-[920px]"
         />
         <div className="mt-8 flex justify-center tablet:mt-10">
-          <CtaButton>{finalCta.cta}</CtaButton>
+          <CtaButton id={trackingIds.finalCta.cta}>{finalCta.cta}</CtaButton>
         </div>
       </div>
 

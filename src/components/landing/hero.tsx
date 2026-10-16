@@ -6,6 +6,7 @@ import badgeEurusd from "@/assets/images/hero-badge-eurusd.webp";
 import badgeSentiment from "@/assets/images/hero-badge-sentiment.webp";
 import badgeGold from "@/assets/images/hero-badge-gold.webp";
 import { hero } from "@/content/forex";
+import { trackingIds } from "@/content/tracking-ids";
 import { CtaButton } from "./cta-button";
 import { RegulatorMarquee } from "./regulator-marquee";
 
@@ -65,25 +66,27 @@ export function Hero() {
         className="absolute top-[240px] -left-[211px] -z-10 mix-blend-screen h-[384px] w-[601px] max-w-none object-cover tablet:top-[40px] tablet:left-0 tablet:h-[712px] tablet:w-full"
       />
 
-      <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center gap-8 px-4 tablet:px-8 desktop:flex-row desktop:items-center desktop:justify-between desktop:gap-0 desktop:px-0">
-        <div className="flex flex-col items-center text-center desktop:items-start desktop:pt-[12px] desktop:text-left">
-          <h1
-            id="hero-title"
-            className="text-[28px] leading-[35px] font-bold tracking-[-0.7px] tablet:text-[56px] tablet:leading-[1.15] tablet:tracking-[-1.6px] desktop:text-[72px] desktop:leading-[88.2px] desktop:tracking-[-2.16px]"
-          >
-            <span className="block text-white">{hero.titleLine1}</span>
-            <span className="block text-white">{hero.titleLine2}</span>
-            <span className="block text-brand-300">{hero.titleAccent}</span>
-          </h1>
-          <CtaButton className="mt-8 hidden desktop:inline-flex">{hero.cta}</CtaButton>
-        </div>
+      {/*
+        One CTA element (unique tracking id), placed by CSS grid:
+        mobile/tablet: title → phone → CTA; desktop: title + CTA on the left, phone on the right.
+      */}
+      <div className="mx-auto grid w-full max-w-[1200px] justify-items-center gap-8 px-4 tablet:px-8 desktop:grid-cols-[1fr_auto] desktop:grid-rows-[1fr_auto_auto_1fr] desktop:justify-items-start desktop:gap-0 desktop:px-0">
+        <h1
+          id="hero-title"
+          className="text-center text-[28px] leading-[35px] font-bold tracking-[-0.7px] tablet:text-[56px] tablet:leading-[1.15] tablet:tracking-[-1.6px] desktop:col-start-1 desktop:row-start-2 desktop:pt-[12px] desktop:text-left desktop:text-[72px] desktop:leading-[88.2px] desktop:tracking-[-2.16px]"
+        >
+          <span className="block text-white">{hero.titleLine1}</span>
+          <span className="block text-white">{hero.titleLine2}</span>
+          <span className="block text-brand-300">{hero.titleAccent}</span>
+        </h1>
 
-        <div className="desktop:mr-[-20px]">
+        <div className="desktop:col-start-2 desktop:row-span-4 desktop:row-start-1 desktop:mr-[-20px]">
           <HeroVisual />
         </div>
 
-        {/* On mobile/tablet the CTA sits below the phone, as in Framer */}
-        <CtaButton className="desktop:hidden">{hero.cta}</CtaButton>
+        <CtaButton id={trackingIds.hero.cta} className="desktop:col-start-1 desktop:row-start-3 desktop:mt-8">
+          {hero.cta}
+        </CtaButton>
       </div>
 
       <div className="mt-12 desktop:mt-[60px]">

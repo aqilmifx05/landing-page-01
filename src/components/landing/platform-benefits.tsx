@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import platformPhone from "@/assets/images/platform-phone.webp";
 import { benefits, stats, type Benefit, type Stat } from "@/content/forex";
+import { trackingIds } from "@/content/tracking-ids";
 import { cn } from "@/lib/utils";
 import { CtaButton } from "./cta-button";
 import { SectionHeading } from "./section-heading";
@@ -100,7 +101,7 @@ export function PlatformBenefits() {
         </div>
 
         <div className="mt-10 flex justify-center desktop:mt-20">
-          <CtaButton>{benefits.cta}</CtaButton>
+          <CtaButton id={trackingIds.benefits.cta}>{benefits.cta}</CtaButton>
         </div>
       </div>
     </section>

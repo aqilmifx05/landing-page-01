@@ -4,6 +4,7 @@ import certKomdigi from "@/assets/images/cert-komdigi.png";
 import certIso from "@/assets/images/cert-iso27001.png";
 import certKan from "@/assets/images/cert-kan.png";
 import { footer, links } from "@/content/forex";
+import { trackingIds } from "@/content/tracking-ids";
 import { socialIcons } from "./social-icons";
 
 const heading = "text-sm leading-5 font-semibold text-white tablet:text-base tablet:leading-6";
@@ -60,13 +61,14 @@ export function SiteFooter() {
                 return (
                   <li key={s.href}>
                     <a
+                      id={trackingIds.footer.social(s.icon)}
                       href={s.href}
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={`MIFX di ${s.label}`}
                       className="block text-ink-500 transition-colors hover:text-white"
                     >
-                      <Icon className="size-6" />
+                      <Icon className="pointer-events-none size-6" />
                     </a>
                   </li>
                 );
@@ -77,11 +79,29 @@ export function SiteFooter() {
           <div>
             <p className={heading}>{footer.appTitle}</p>
             <div className="mt-4 flex items-center gap-3">
-              <a href={links.appDownload} aria-label="Download di App Store">
-                <Image src="/images/badge-app-store.svg" alt="" width={120} height={40} unoptimized />
+              <a id={trackingIds.footer.appStore} href={links.appDownload} aria-label="Download di App Store">
+                <Image
+                  src="/images/badge-app-store.svg"
+                  alt=""
+                  width={120}
+                  height={40}
+                  unoptimized
+                  className="pointer-events-none"
+                />
               </a>
-              <a href={links.appDownload} aria-label="Dapatkan di Google Play">
-                <Image src="/images/badge-google-play.svg" alt="" width={135} height={40} unoptimized />
+              <a
+                id={trackingIds.footer.googlePlay}
+                href={links.appDownload}
+                aria-label="Dapatkan di Google Play"
+              >
+                <Image
+                  src="/images/badge-google-play.svg"
+                  alt=""
+                  width={135}
+                  height={40}
+                  unoptimized
+                  className="pointer-events-none"
+                />
               </a>
             </div>
           </div>

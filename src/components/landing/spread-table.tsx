@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { spread, spreadColumns } from "@/content/forex";
+import { trackingIds } from "@/content/tracking-ids";
 import { cn } from "@/lib/utils";
 import { CtaButton } from "./cta-button";
 import { InfoHint } from "./info-hint";
@@ -40,7 +41,13 @@ export function SpreadTable() {
                   >
                     <span className="inline-flex items-center gap-1.5">
                       {col.label}
-                      {"hint" in col ? <InfoHint title={col.hint.title} body={col.hint.body} /> : null}
+                      {"hint" in col ? (
+                        <InfoHint
+                          id={trackingIds.spread.info(col.key)}
+                          title={col.hint.title}
+                          body={col.hint.body}
+                        />
+                      ) : null}
                     </span>
                   </TableHead>
                 ))}
@@ -71,7 +78,7 @@ export function SpreadTable() {
         </div>
 
         <div className="mt-10 flex justify-center tablet:mt-[50px]">
-          <CtaButton>{spread.cta}</CtaButton>
+          <CtaButton id={trackingIds.spread.cta}>{spread.cta}</CtaButton>
         </div>
       </div>
     </section>
