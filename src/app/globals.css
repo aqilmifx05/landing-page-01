@@ -11,9 +11,13 @@
  * (Button, Table, Popover, Carousel) inherit the MIFX look.
  */
 @theme {
-  /* Breakpoints match the Framer project: mobile < 810 ≤ tablet < 1200 ≤ desktop */
+  /*
+   * Breakpoints match the Framer project exactly:
+   * mobile < 810 ≤ tablet < 1200 ≤ desktop < 1600 ≤ wide
+   */
   --breakpoint-tablet: 810px;
   --breakpoint-desktop: 1200px;
+  --breakpoint-wide: 1600px;
 
   /* Brand green */
   --color-brand-50: #afe4c1;
@@ -53,14 +57,14 @@
   }
 
   /* Gentle float for decorative badges */
-  --animate-float: float 6s ease-in-out infinite;
+  --animate-float: float 5s ease-in-out infinite;
   @keyframes float {
     0%,
     100% {
       transform: translateY(0);
     }
     50% {
-      transform: translateY(-10px);
+      transform: translateY(-8px);
     }
   }
 }
@@ -136,17 +140,62 @@
 }
 
 @layer components {
-  /* Section heading scale (Framer: 28/35 mobile, 48/51.84 tablet+) */
-  .heading-section {
-    @apply text-[28px] leading-[35px] font-bold tracking-[-0.7px] tablet:text-5xl tablet:leading-[1.08] tablet:tracking-[-1.2px];
+  /*
+   * Type scale — measured from the Framer project at each breakpoint
+   * (font-size / line-height / letter-spacing). mobile → tablet → desktop.
+   */
+  /* Hero title: 28/35 → 56/63.84 → 72/88.2 */
+  .t-hero {
+    @apply text-[28px] leading-[35px] font-bold tracking-[-0.7px] tablet:text-[56px] tablet:leading-[63.84px] tablet:tracking-[-1.68px] desktop:text-[72px] desktop:leading-[88.2px] desktop:tracking-[-2.16px];
   }
-  /* Card title (Framer: 20/28 mobile, 24/32 tablet+) */
-  .heading-card {
-    @apply text-xl leading-7 font-bold tracking-[-0.3px] tablet:text-2xl tablet:leading-8 tablet:tracking-[-0.36px];
+  /* Section heading + big stat numbers: 28/35 → 32/40 → 48/51.84 */
+  .t-h2 {
+    @apply text-[28px] leading-[35px] font-bold tracking-[-0.7px] tablet:text-[32px] tablet:leading-[40px] tablet:tracking-[-0.8px] desktop:text-[48px] desktop:leading-[51.84px] desktop:tracking-[-1.2px];
   }
+  /* Card title: 20/28 → 20/28 → 24/31.92 */
+  .t-card {
+    @apply text-[20px] leading-[28px] font-bold tracking-[-0.3px] desktop:text-[24px] desktop:leading-[31.92px] desktop:tracking-[-0.36px];
+  }
+  /* Body / subtitles / labels: 14/19.6 → 16/22.4 → 16/24 */
+  .t-body {
+    @apply text-[14px] leading-[19.6px] tablet:text-[16px] tablet:leading-[22.4px] desktop:leading-[24px];
+  }
+  /* Small body (Sentiment/News text, quotes): 12/15.6 → 12/15.6 → 14/19.6 */
+  .t-small {
+    @apply text-[12px] leading-[15.6px] desktop:text-[14px] desktop:leading-[19.6px];
+  }
+  /* Compact UI text (table header & product, footer headings): 14/19.6 → 14/19.6 → 16/24 */
+  .t-ui {
+    @apply text-[14px] leading-[19.6px] desktop:text-[16px] desktop:leading-[24px];
+  }
+  /* Fixed 14/19.6 (footer links & legal) */
+  .t-fine {
+    @apply text-[14px] leading-[19.6px];
+  }
+
   /* Radial "bg-light" glow used behind several sections */
   .glow-radial {
     background: radial-gradient(50% 50% at 50% 50%, rgb(0 78 116 / 0.7) 12.64%, rgb(0 255 34 / 0) 100%);
+  }
+  .glow-radial-soft {
+    background: radial-gradient(50% 50% at 50% 50%, rgb(0 78 116 / 0.5) 12.64%, rgb(0 255 34 / 0) 100%);
+  }
+
+  /*
+   * Trading-tool card (Framer): 1px gradient frame that fades out downwards,
+   * #031320 fill (r15) and a radial glow from below.
+   */
+  .tool-card {
+    @apply relative overflow-hidden rounded-[16px] p-px;
+    background: linear-gradient(180deg, rgb(155 158 174 / 0.4) 0%, rgb(0 0 0 / 0) 100%);
+  }
+  .tool-card-inner {
+    @apply relative h-full overflow-hidden rounded-[15px] bg-[#031320];
+  }
+
+  /* Benefit + stat cards (Framer "USP-dark"): translucent navy, 10px blur, 20% white hairline */
+  .glass-card {
+    @apply rounded-[20px] border border-white/20 bg-[rgb(1_16_28/0.4)] backdrop-blur-[10px];
   }
   /* Thin gradient divider between dark sections */
   .divider-fade {
@@ -157,10 +206,27 @@
       rgb(255 255 255 / 0) 100%
     );
   }
-  /* Card border gradient used on tool / benefit cards */
-  .card-surface {
-    @apply relative overflow-hidden rounded-3xl border border-white/10;
-    background: linear-gradient(180deg, rgb(1 16 28) 0%, rgb(1 31 51) 100%);
+}
+
+/*
+ * Hero background parallax (Framer: the background moves down at half the
+ * scroll speed). Scroll-driven, no JS; browsers without support keep it static.
+ */
+@keyframes hero-parallax {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(600px);
+  }
+}
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-parallax {
+      animation: hero-parallax linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 1200px;
+    }
   }
 }
 

@@ -18,7 +18,12 @@ const inter = Inter({
  * Other hosts default to live, as before.
  */
 const isLive = process.env.VERCEL ? process.env.NEXT_PUBLIC_SITE_LIVE === "true" : true;
-const GTM_ID = isLive ? (process.env.NEXT_PUBLIC_GTM_ID ?? "GTM-TG7GVFT") : "";
+/**
+ * GTM also loads when NEXT_PUBLIC_GTM_ENABLED=true — use it on a Vercel test
+ * deployment to check click tracking in GTM Preview while the page stays noindex.
+ */
+const gtmEnabled = isLive || process.env.NEXT_PUBLIC_GTM_ENABLED === "true";
+const GTM_ID = gtmEnabled ? (process.env.NEXT_PUBLIC_GTM_ID ?? "GTM-TG7GVFT") : "";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://get.mifx.com"),

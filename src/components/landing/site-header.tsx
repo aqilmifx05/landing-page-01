@@ -2,12 +2,12 @@ import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { links } from "@/content/forex";
-import { trackingIds } from "@/content/tracking-ids";
+import { track, tracking } from "@/content/tracking-ids";
 
 export function SiteHeader() {
   return (
     <header className="header-scroll fixed inset-x-0 top-0 z-50">
-      <div className="mx-auto flex h-[72px] w-full max-w-[1200px] items-center justify-between px-4 tablet:h-20 tablet:px-8 desktop:px-0">
+      <div className="mx-auto flex h-[72px] w-full max-w-[1360px] items-center justify-between px-4 tablet:h-20 tablet:px-8 desktop:px-20">
         <a href="https://mifx.com" aria-label="MIFX — beranda" className="pl-2">
           <Image
             src="/images/mifx-logo.svg"
@@ -26,12 +26,12 @@ export function SiteHeader() {
             size="nav"
             className="hidden text-brand-500 hover:bg-brand-800 tablet:inline-flex"
           >
-            <a id={trackingIds.header.login} href={links.login}>
+            <a {...track(tracking.header.login)} href={links.login}>
               Masuk
             </a>
           </Button>
           <Button asChild size="nav" className="hover:bg-brand-600">
-            <a id={trackingIds.header.openAccount} href={links.openAccountHeader}>
+            <a {...track(tracking.header.openAccount)} href={links.openAccountHeader}>
               Buka Akun
             </a>
           </Button>

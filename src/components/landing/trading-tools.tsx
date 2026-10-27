@@ -4,52 +4,78 @@ import { tradingTools, type TradingTool } from "@/content/forex";
 import { cn } from "@/lib/utils";
 import { SectionHeading } from "./section-heading";
 
-type Variant = "tall" | "wide";
+type ToolLayout = {
+  /** Card wrapper size per breakpoint */
+  card: string;
+  /** Description type style + width of the desktop text column */
+  text: string;
+  /** Image box (object-contain) — position inside the card per breakpoint */
+  image: string;
+  sizes: string;
+};
 
-function ToolCard({ tool, variant, className }: { tool: TradingTool; variant: Variant; className?: string }) {
-  const tall = variant === "tall";
+/* Geometry measured from Framer at 390 / 1000 / 1440px. */
+const layouts: ToolLayout[] = [
+  {
+    // Trading Signal — tall card
+    card: "h-[462px] tablet:row-span-2 tablet:h-[548px] desktop:h-[500px]",
+    text: "t-body desktop:max-w-[232px]",
+    image:
+      "top-[143px] left-[calc(50%-126px)] h-[307px] w-[252px] tablet:top-[198px] desktop:top-[59px] desktop:right-[28px] desktop:left-auto desktop:h-[414px] desktop:w-[339px]",
+    sizes: "(min-width: 1200px) 339px, 252px",
+  },
+  {
+    // Sentiment Analysis
+    card: "h-[279px] tablet:h-[258px] desktop:h-[234px]",
+    text: "t-small desktop:max-w-[186px]",
+    image:
+      "top-[139px] left-[calc(50%-137.5px)] h-[109px] w-[275px] tablet:top-[124px] desktop:top-[96px] desktop:right-[25px] desktop:left-auto desktop:w-[274px]",
+    sizes: "275px",
+  },
+  {
+    // News
+    card: "h-[279px] tablet:h-[258px] desktop:h-[234px]",
+    text: "t-small desktop:max-w-[176px]",
+    image:
+      "top-[124px] left-[calc(50%-139px)] h-[129px] w-[278px] tablet:top-[110px] desktop:top-[69px] desktop:right-[25px] desktop:left-auto desktop:h-[133px] desktop:w-[300px]",
+    sizes: "(min-width: 1200px) 300px, 278px",
+  },
+];
+
+function ToolCard({ tool, layout }: { tool: TradingTool; layout: ToolLayout }) {
   return (
-    <article className={cn("card-surface reveal flex flex-col p-5 tablet:p-9", className)}>
-      {/* bottom glow */}
-      <div
-        aria-hidden
-        className="glow-radial pointer-events-none absolute -bottom-1/2 left-1/2 h-full w-[140%] -translate-x-1/2 opacity-70"
-      />
-
-      <div className="relative z-10">
-        <h3 className="heading-card text-white">{tool.title}</h3>
-        <p
-          className={cn(
-            "mt-2 text-sm leading-[19.6px] text-ink-400 tablet:mt-4",
-            tall
-              ? "tablet:text-base tablet:leading-6 desktop:max-w-[232px]"
-              : "tablet:text-sm tablet:leading-5 desktop:max-w-[180px]",
-          )}
-        >
-          {tool.description}
-        </p>
+    <article className={cn("tool-card reveal", layout.card)}>
+      <div className="tool-card-inner p-5 desktop:p-9">
+        {/* Glow rising from below (Framer "bg-light" inside the card) */}
+        <div
+          aria-hidden
+          className="glow-radial pointer-events-none absolute top-[36px] left-1/2 h-[655px] w-[1037px] -translate-x-1/2"
+        />
+        <div className="relative z-10">
+          <h3 className="t-card text-white">{tool.title}</h3>
+          <p className={cn("mt-4 text-ink-400", layout.text)}>{tool.description}</p>
+        </div>
+        <div className={cn("absolute z-10", layout.image)}>
+          <Image
+            src={tool.image}
+            alt={`Tampilan fitur ${tool.title} di aplikasi MIFX`}
+            fill
+            sizes={layout.sizes}
+            className="object-contain"
+          />
+        </div>
       </div>
-
-      <Image
-        src={tool.image}
-        alt={`Tampilan fitur ${tool.title} di aplikasi MIFX`}
-        sizes={tall ? "(min-width: 1200px) 339px, 252px" : "(min-width: 1200px) 300px, 278px"}
-        className={cn(
-          "relative z-10 mx-auto mt-6",
-          tall
-            ? "w-[252px] tablet:w-[300px] desktop:absolute desktop:top-[59px] desktop:right-[29px] desktop:mt-0 desktop:w-[339px]"
-            : "w-[278px] desktop:absolute desktop:top-1/2 desktop:right-[30px] desktop:mt-0 desktop:w-[290px] desktop:-translate-y-1/2",
-        )}
-      />
     </article>
   );
 }
 
 export function TradingTools() {
-  const [signal, sentiment, news] = tradingTools.items;
   return (
-    <section aria-labelledby="tools-title" className="bg-navy-950 py-16 tablet:py-20">
-      <div className="mx-auto w-full max-w-[1200px] px-4 tablet:px-8 desktop:px-0">
+    <section
+      aria-labelledby="tools-title"
+      className="bg-navy-950 pt-[57px] pb-[57px] tablet:pt-[81px] tablet:pb-[101px]"
+    >
+      <div className="mx-auto w-full max-w-[1360px] px-4 tablet:px-9 desktop:px-20">
         <SectionHeading
           id="tools-title"
           title={tradingTools.title}
@@ -57,10 +83,10 @@ export function TradingTools() {
           subtitle={tradingTools.subtitle}
         />
 
-        <div className="mt-10 grid gap-4 tablet:mt-[60px] tablet:grid-cols-2 desktop:grid-rows-[233px_233px] desktop:gap-8">
-          <ToolCard tool={signal} variant="tall" className="tablet:row-span-2 desktop:min-h-[498px]" />
-          <ToolCard tool={sentiment} variant="wide" />
-          <ToolCard tool={news} variant="wide" />
+        <div className="mt-[41px] grid gap-5 tablet:mt-[61px] tablet:grid-cols-2 tablet:gap-8">
+          {tradingTools.items.map((tool, i) => (
+            <ToolCard key={tool.title} tool={tool} layout={layouts[i]} />
+          ))}
         </div>
       </div>
     </section>

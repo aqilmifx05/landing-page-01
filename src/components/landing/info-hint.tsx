@@ -4,10 +4,11 @@ import * as React from "react";
 import { Info } from "lucide-react";
 
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { track, type TrackTarget } from "@/content/tracking-ids";
 
 type InfoHintProps = {
-  /** Unique tracking id for the ⓘ trigger button */
-  id: string;
+  /** id + aria-label for the ⓘ trigger button (from src/content/tracking-ids.ts) */
+  tracking: TrackTarget;
   title: string;
   body: string;
 };
@@ -18,7 +19,7 @@ type InfoHintProps = {
  * A Radix Popover covers both — it opens on hover for mouse pointers and on
  * click/tap everywhere, with keyboard + screen-reader support built in.
  */
-export function InfoHint({ id, title, body }: InfoHintProps) {
+export function InfoHint({ tracking, title, body }: InfoHintProps) {
   const [open, setOpen] = React.useState(false);
   const closeTimer = React.useRef<ReturnType<typeof setTimeout>>(undefined);
 
@@ -46,8 +47,7 @@ export function InfoHint({ id, title, body }: InfoHintProps) {
   return (
     <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger
-        id={id}
-        aria-label={title}
+        {...track(tracking)}
         onPointerEnter={openSoon}
         onPointerLeave={closeSoon}
         className="inline-flex size-5 items-center justify-center rounded-full text-white/90 transition-colors hover:text-brand-300 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"

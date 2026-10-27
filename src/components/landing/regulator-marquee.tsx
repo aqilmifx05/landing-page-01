@@ -39,8 +39,8 @@ export function RegulatorMarquee({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "relative mx-auto w-full max-w-[1200px] overflow-hidden",
-        "[mask-image:linear-gradient(90deg,transparent,#000_10%,#000_90%,transparent)]",
+        "flex h-[50px] items-center overflow-hidden",
+        "[mask-image:linear-gradient(90deg,transparent,#000_8.5%,#000_91.5%,transparent)]",
         className,
       )}
     >

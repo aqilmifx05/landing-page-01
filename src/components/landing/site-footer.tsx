@@ -4,23 +4,24 @@ import certKomdigi from "@/assets/images/cert-komdigi.png";
 import certIso from "@/assets/images/cert-iso27001.png";
 import certKan from "@/assets/images/cert-kan.png";
 import { footer, links } from "@/content/forex";
-import { trackingIds } from "@/content/tracking-ids";
+import { track, tracking } from "@/content/tracking-ids";
 import { socialIcons } from "./social-icons";
 
-const heading = "text-sm leading-5 font-semibold text-white tablet:text-base tablet:leading-6";
-const linkText = "text-sm leading-5 font-medium text-ink-500 transition-colors hover:text-white";
+// Framer: headings 14/19.6 on mobile & tablet, 16/24 on desktop; links and legal text 14/19.6.
+const heading = "t-ui font-semibold text-white";
+const linkText = "t-fine font-medium text-ink-500 transition-colors hover:text-white";
 
 export function SiteFooter() {
   return (
-    <footer className="bg-navy-950 pt-12 pb-10 tablet:pt-[60px]">
-      <div className="mx-auto w-full max-w-[1200px] px-[30px] tablet:px-8 desktop:px-0">
-        <div className="grid gap-10 tablet:grid-cols-[267px_268px_1fr] tablet:gap-0">
+    <footer className="bg-navy-950 pt-12 pb-10">
+      <div className="mx-auto w-full max-w-[1360px] px-[30px] desktop:px-20">
+        <div className="grid gap-10 tablet:grid-cols-[227px_228px_1fr] tablet:gap-0 desktop:grid-cols-[267px_268px_1fr]">
           {footer.columns.map((col) => (
             <nav key={col.title} aria-label={col.title}>
               <p className={heading}>{col.title}</p>
               <ul className="mt-4 space-y-4 tablet:mt-5">
                 {col.links.map((l) => (
-                  <li key={l.href} className="text-sm leading-5">
+                  <li key={l.href} className="t-fine">
                     <a href={l.href} className={linkText}>
                       {l.label}
                     </a>
@@ -34,7 +35,7 @@ export function SiteFooter() {
             <p className={heading}>{footer.legal.title}</p>
             <ul className="mt-4 space-y-2 tablet:mt-5">
               {footer.legal.items.map((item) => (
-                <li key={item} className="text-sm leading-5 font-medium text-ink-500">
+                <li key={item} className="t-fine font-medium text-ink-500">
                   {item}
                 </li>
               ))}
@@ -52,7 +53,7 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col gap-10 tablet:mt-[50px] tablet:flex-row tablet:items-start tablet:justify-between">
+        <div className="mt-10 flex flex-col gap-10 tablet:flex-row tablet:items-start tablet:justify-between">
           <div>
             <p className={heading}>{footer.social.title}</p>
             <ul className="mt-4 flex items-center gap-4">
@@ -61,11 +62,10 @@ export function SiteFooter() {
                 return (
                   <li key={s.href}>
                     <a
-                      id={trackingIds.footer.social(s.icon)}
+                      {...track(tracking.footer.social(s.icon, s.label))}
                       href={s.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      aria-label={`MIFX di ${s.label}`}
                       className="block text-ink-500 transition-colors hover:text-white"
                     >
                       <Icon className="pointer-events-none size-6" />
@@ -79,7 +79,7 @@ export function SiteFooter() {
           <div>
             <p className={heading}>{footer.appTitle}</p>
             <div className="mt-4 flex items-center gap-3">
-              <a id={trackingIds.footer.appStore} href={links.appDownload} aria-label="Download di App Store">
+              <a {...track(tracking.footer.appStore)} href={links.appDownload}>
                 <Image
                   src="/images/badge-app-store.svg"
                   alt=""
@@ -89,11 +89,7 @@ export function SiteFooter() {
                   className="pointer-events-none"
                 />
               </a>
-              <a
-                id={trackingIds.footer.googlePlay}
-                href={links.appDownload}
-                aria-label="Dapatkan di Google Play"
-              >
+              <a {...track(tracking.footer.googlePlay)} href={links.appDownload}>
                 <Image
                   src="/images/badge-google-play.svg"
                   alt=""
@@ -108,9 +104,7 @@ export function SiteFooter() {
         </div>
 
         <hr className="mt-10 border-ink-500/40" />
-        <p className="mt-5 text-sm leading-5 font-medium text-ink-500 tablet:text-center">
-          {footer.disclaimer}
-        </p>
+        <p className="t-fine mt-5 font-medium text-ink-500 tablet:text-center">{footer.disclaimer}</p>
       </div>
     </footer>
   );

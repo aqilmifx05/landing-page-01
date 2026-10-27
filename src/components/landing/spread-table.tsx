@@ -2,7 +2,7 @@ import Image from "next/image";
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { spread, spreadColumns } from "@/content/forex";
-import { trackingIds } from "@/content/tracking-ids";
+import { tracking } from "@/content/tracking-ids";
 import { cn } from "@/lib/utils";
 import { CtaButton } from "./cta-button";
 import { InfoHint } from "./info-hint";
@@ -10,22 +10,26 @@ import { SectionHeading } from "./section-heading";
 
 /** Framer shows only Produk + Target Spread on mobile. */
 const hideOnMobile = (key: string) => key === "size" || key === "swap";
+const cellVisibility = (key: string) => (hideOnMobile(key) ? "hidden tablet:table-cell" : "");
 
 export function SpreadTable() {
   return (
-    <section aria-labelledby="spread-title" className="bg-navy-950 pb-16 tablet:pb-20">
-      <div aria-hidden className="divider-fade mx-auto mb-16 h-px w-full max-w-[680px] tablet:mb-20" />
-      <div className="mx-auto w-full max-w-[1200px] px-4 tablet:px-8 desktop:px-0">
+    <section
+      aria-labelledby="spread-title"
+      className="relative bg-navy-950 pt-[57px] pb-14 tablet:pt-[81px] tablet:pb-[100px]"
+    >
+      <div aria-hidden className="divider-fade absolute inset-x-0 top-0 mx-auto h-px max-w-[680px]" />
+      <div className="mx-auto w-full max-w-[1360px] px-4 tablet:px-9 desktop:px-20">
         <SectionHeading
           id="spread-title"
           title={spread.title}
           accent={spread.titleAccent}
           subtitle={spread.subtitle}
-          className="max-w-[320px] tablet:max-w-[920px]"
+          className="max-w-[320px]"
         />
 
-        <div className="reveal mx-auto mt-10 max-w-[1030px] px-3.5 tablet:mt-[60px] tablet:px-0">
-          <Table className="text-sm tablet:text-base">
+        <div className="reveal mt-[22px] tablet:mt-[43px] desktop:mt-11">
+          <Table className="table-fixed">
             <TableHeader>
               <TableRow className="border-white/10 hover:bg-transparent has-aria-expanded:bg-transparent">
                 {spreadColumns.map((col) => (
@@ -33,17 +37,15 @@ export function SpreadTable() {
                     key={col.key}
                     scope="col"
                     className={cn(
-                      "h-14 px-2 text-sm font-medium text-white tablet:px-4 tablet:text-base",
-                      col.key === "product" ? "text-left tablet:pl-[34px]" : "text-center",
-                      col.key === "spread" && "text-right tablet:text-center",
-                      hideOnMobile(col.key) && "hidden tablet:table-cell",
+                      "t-ui h-14 px-2 text-center font-medium text-white",
+                      cellVisibility(col.key),
                     )}
                   >
-                    <span className="inline-flex items-center gap-1.5">
+                    <span className="inline-flex items-center gap-1">
                       {col.label}
                       {"hint" in col ? (
                         <InfoHint
-                          id={trackingIds.spread.info(col.key)}
+                          tracking={tracking.spread.info(col.key, col.hint.title)}
                           title={col.hint.title}
                           body={col.hint.body}
                         />
@@ -56,19 +58,17 @@ export function SpreadTable() {
             <TableBody>
               {spread.rows.map((row) => (
                 <TableRow key={row.product} className="h-[58px] border-white/10 hover:bg-white/[0.03]">
-                  <TableCell className="px-2 tablet:px-2.5">
-                    <span className="flex items-center gap-3 font-semibold text-white">
+                  <TableCell className="px-2">
+                    <span className="t-ui flex items-center justify-center gap-2.5 font-semibold text-white">
                       <Image src={row.icon} alt="" sizes="32px" className="h-5 w-8 object-contain" />
                       {row.product}
                     </span>
                   </TableCell>
-                  <TableCell className="px-2 text-right text-ink-400 tablet:text-center">
-                    {row.spread}
-                  </TableCell>
-                  <TableCell className="hidden px-2 text-center text-ink-400 tablet:table-cell">
+                  <TableCell className="t-body px-2 text-center text-ink-400">{row.spread}</TableCell>
+                  <TableCell className={cn("t-body px-2 text-center text-ink-400", cellVisibility("size"))}>
                     {row.size}
                   </TableCell>
-                  <TableCell className="hidden px-2 text-center text-ink-400 tablet:table-cell">
+                  <TableCell className={cn("t-body px-2 text-center text-ink-400", cellVisibility("swap"))}>
                     {row.swap}
                   </TableCell>
                 </TableRow>
@@ -77,8 +77,8 @@ export function SpreadTable() {
           </Table>
         </div>
 
-        <div className="mt-10 flex justify-center tablet:mt-[50px]">
-          <CtaButton id={trackingIds.spread.cta}>{spread.cta}</CtaButton>
+        <div className="mt-8 flex justify-center desktop:mt-[34px]">
+          <CtaButton tracking={tracking.spread.cta}>{spread.cta}</CtaButton>
         </div>
       </div>
     </section>

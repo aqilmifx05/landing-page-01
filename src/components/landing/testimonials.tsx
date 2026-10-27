@@ -7,18 +7,18 @@ import { Star } from "lucide-react";
 
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 import { testimonials, type Testimonial } from "@/content/forex";
-import { trackingIds } from "@/content/tracking-ids";
+import { track, tracking } from "@/content/tracking-ids";
 import { cn } from "@/lib/utils";
 import { SectionHeading } from "./section-heading";
 
 function TestimonialCard({ t }: { t: Testimonial }) {
   return (
-    <figure className="relative h-[500px] overflow-hidden rounded-3xl bg-navy-950 tablet:h-[480px]">
+    <figure className="relative h-[500px] overflow-hidden rounded-[20px] bg-navy-950 tablet:h-[480px]">
       <Image
         src={t.photo}
         alt={t.name}
         fill
-        sizes="(min-width: 810px) 400px, 358px"
+        sizes="(min-width: 1600px) 360px, (min-width: 1200px) 400px, (min-width: 810px) 800px, 358px"
         className="object-cover object-top"
       />
       <div
@@ -26,31 +26,27 @@ function TestimonialCard({ t }: { t: Testimonial }) {
         className="absolute inset-0 bg-[linear-gradient(180deg,rgba(1,16,28,0)_35%,rgba(1,16,28,0.92)_68%,#01101c_100%)]"
       />
       <figcaption className="absolute inset-x-0 bottom-0 p-5">
-        <div className="flex gap-0.5" role="img" aria-label={`Rating ${t.rating} dari 5`}>
+        <div className="flex gap-1" role="img" aria-label={`Rating ${t.rating} dari 5`}>
           {Array.from({ length: t.rating }).map((_, i) => (
-            <Star key={i} aria-hidden className="size-6 fill-star text-star" strokeWidth={0} />
+            <Star key={i} aria-hidden className="size-5 fill-star text-star" strokeWidth={0} />
           ))}
         </div>
-        <p className="heading-card mt-2 font-semibold text-white">{t.name}</p>
-        <p className="text-sm leading-5 text-brand-300 tablet:text-base tablet:leading-6">{t.role}</p>
-        <blockquote className="mt-4 text-xs leading-[15.6px] text-ink-400 tablet:text-sm tablet:leading-5">
-          {t.quote}
-        </blockquote>
+        <p className="t-card mt-3 max-w-[320px] font-semibold text-white">{t.name}</p>
+        <p className="t-body max-w-[320px] text-brand-300">{t.role}</p>
+        <blockquote className="t-small mt-4 text-ink-400">{t.quote}</blockquote>
       </figcaption>
     </figure>
   );
 }
 
 function ArrowButton({ dir, onClick }: { dir: "prev" | "next"; onClick: () => void }) {
-  const id = dir === "prev" ? trackingIds.testimonials.prev : trackingIds.testimonials.next;
   return (
     <button
-      id={id}
+      {...track(dir === "prev" ? tracking.testimonials.prev : tracking.testimonials.next)}
       type="button"
       onClick={onClick}
-      aria-label={dir === "prev" ? "Testimoni sebelumnya" : "Testimoni berikutnya"}
       className={cn(
-        "absolute top-[220px] z-10 size-10 rounded-full transition-transform active:scale-95 tablet:hidden",
+        "absolute top-[240px] z-10 size-10 rounded-full transition-transform active:scale-95 tablet:hidden",
         "focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
         dir === "prev" ? "left-[31px]" : "right-[31px]",
       )}
@@ -92,8 +88,11 @@ export function Testimonials() {
   }, [api]);
 
   return (
-    <section aria-labelledby="testimonials-title" className="overflow-hidden bg-ink-50 py-16 tablet:py-20">
-      <div className="mx-auto w-full max-w-[1200px] px-4 tablet:px-8 desktop:px-0">
+    <section
+      aria-labelledby="testimonials-title"
+      className="overflow-hidden bg-ink-50 pt-[57px] pb-[60px] tablet:pt-[81px] tablet:pb-[92px] desktop:pb-[88px]"
+    >
+      <div className="px-4 tablet:px-9">
         <SectionHeading
           id="testimonials-title"
           tone="light"
@@ -113,7 +112,10 @@ export function Testimonials() {
       >
         <CarouselContent className="-ml-5">
           {testimonials.items.map((t) => (
-            <CarouselItem key={t.name} className="basis-[calc(100%-32px)] pl-5 tablet:basis-[420px]">
+            <CarouselItem
+              key={t.name}
+              className="basis-[calc(100%-32px)] pl-5 tablet:basis-[calc(100%-400px)] desktop:basis-[420px] wide:basis-[380px]"
+            >
               <TestimonialCard t={t} />
             </CarouselItem>
           ))}
@@ -131,11 +133,10 @@ export function Testimonials() {
           {testimonials.items.map((t, i) => (
             <button
               key={t.name}
+              {...track(tracking.testimonials.dot(i, t.name))}
               type="button"
-              id={trackingIds.testimonials.dot(i)}
               role="tab"
               aria-selected={selected === i}
-              aria-label={`Testimoni ${i + 1}: ${t.name}`}
               onClick={() => navigate(() => api?.scrollTo(i))}
               className={cn(
                 "size-2 rounded-full transition-colors",

@@ -45,14 +45,14 @@ export function SectionHeading({
   );
 
   return (
-    <div className={cn("reveal mx-auto max-w-[310px] text-center tablet:max-w-[920px]", className)}>
-      <h2 id={id} className="heading-section">
+    <div className={cn("reveal mx-auto max-w-[310px] text-center tablet:max-w-[928px]", className)}>
+      <h2 id={id} className="t-h2">
         {accentFirst ? green : main} {accentFirst ? main : green}
       </h2>
       {subtitle ? (
         <p
           className={cn(
-            "mx-auto mt-4 max-w-[300px] text-sm leading-[19.6px] tablet:mt-6 tablet:max-w-none tablet:text-base tablet:leading-6",
+            "t-body mx-auto mt-4 max-w-[300px] tablet:mt-5 tablet:max-w-none",
             tone === "dark" ? "text-ink-200 tablet:text-ink-400" : "text-ink-700",
           )}
         >
